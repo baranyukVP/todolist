@@ -10,6 +10,7 @@ const Input = ({
             <input
                 {...props}
             />
+            {error && (<h4 className="text-danger">{error}</h4>)}
         </div>
 );
 

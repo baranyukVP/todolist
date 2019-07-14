@@ -20,3 +20,7 @@ body {
 .task h2, p {
     margin: 0;
 }
+
+.text-danger {
+    color: #cc3131;
+}
