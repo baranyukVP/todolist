@@ -24,8 +24,14 @@ class App extends React.Component {
     addNewTask(e) {
         e.preventDefault();
         const { tasks, taskName, taskDescription } = this.state;
-
-        let newTask = { 'taskId': tasks.length, 'taskName': taskName, 'taskDescription': taskDescription };
+        
+        let newTask = {
+            'taskId': tasks.length > 0
+                ? tasks[tasks.length - 1].taskId + 1
+                : 0,
+            'taskName': taskName,
+            'taskDescription': taskDescription
+        };
         let newTasks = tasks ? tasks : [];
         newTasks.push(newTask);
 
