@@ -21,6 +21,7 @@ class App extends React.Component {
         this.addNewTask = this.addNewTask.bind(this);
         this.onChangeNewTaskParams = this.onChangeNewTaskParams.bind(this);
         this.handleClickEdit = this.handleClickEdit.bind(this);
+        this.handleClickRemove = this.handleClickRemove.bind(this);
     }
 
     addNewTask(e) {
@@ -47,6 +48,20 @@ class App extends React.Component {
         })
     }
 
+    handleClickRemove(taskId) {
+        const { tasks } = this.state;
+        let newTasks = tasks;
+        const position = this.findElement(taskId, tasks);
+        if (position !== -1) {
+            newTasks = newTasks.splice(position, 1);
+        } else {
+            this.setState({
+                error: 'Can\'t recognize this ToDo item. Try again.'
+            })
+        }
+        this.props.cookies.set('tasks', newTasks);
+    }
+
     handleClickEdit(taskId, newTaskName, newTaskDescription) {
         const { tasks } = this.state;
         let newTasks = tasks;
@@ -61,8 +76,7 @@ class App extends React.Component {
             'taskDescription': newTaskDescription
         };
         if (position !== -1) {
-            newTasks = newTasks.splice(position, 1);
-            newTasks.push(newTask);
+            newTasks = newTasks.splice(position, 1, newTask);
         } else {
             this.setState({
                 error: 'Can\'t recognize this ToDo item. Try again.'
@@ -118,6 +132,7 @@ class App extends React.Component {
                             taskId={task.taskId}
                             name={task.taskName}
                             handleClickEdit={this.handleClickEdit}
+                            handleClickRemove={this.handleClickRemove}
                             description={task.taskDescription}
                         />)
                     )}

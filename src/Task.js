@@ -9,12 +9,19 @@ class Task extends React.Component {
             description: props.description
         };
         this.onClickEdit = this.onClickEdit.bind(this);
+        this.onClickRemove = this.onClickRemove.bind(this); 
     }
 
     onClickEdit(e) {
         e.preventDefault();
         const { taskId, name, description } = this.state;
         this.props.handleClickEdit(taskId, name, description);
+    }
+
+    onClickRemove(e) {
+        e.preventDefault();
+        const { taskId } = this.state;
+        this.props.handleClickRemove(taskId);
     }
 
     render() {
@@ -31,6 +38,11 @@ class Task extends React.Component {
                     onClick={this.onClickEdit}
                 >
                     Edit
+                </button>
+                <button
+                    onClick={this.onClickRemove}
+                >
+                    Remove
                 </button>
             </div>
         );
