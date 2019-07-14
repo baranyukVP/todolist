@@ -39,8 +39,11 @@ class App extends React.Component {
         };
         let newTasks = tasks ? tasks : [];
         newTasks.push(newTask);
-
         this.props.cookies.set('tasks', newTasks);
+        this.setState({
+            taskName: '',
+            taskDescription: '',
+        });
     }
 
     onChangeNewTaskParams(e) {
@@ -64,50 +67,35 @@ class App extends React.Component {
         this.props.cookies.set('tasks', newTasks);
     }
 
-    handleClickEdit(taskId, newTaskName, newTaskDescription, newTaskisCompleted) {
+    handleClickEdit(taskId, newTaskName, newTaskDescription) {
         const { tasks } = this.state;
         let newTasks = tasks;
         const position = this.findElement(taskId, tasks);
-        console.log(taskId);
-        console.log(tasks[position]);
-        let newTask = {
-            'taskId': tasks.length > 0
-                ? tasks[tasks.length - 1].taskId + 1
-                : 0,
-            'taskName': newTaskName,
-            'taskDescription': newTaskDescription,
-            'isCompleted': newTaskisCompleted
-        };
         if (position !== -1) {
-            newTasks = newTasks.splice(position, 1, newTask);
+            newTasks[position].taskName = newTaskName;
+            newTasks[position].taskDescription = newTaskDescription;
+            this.props.cookies.set('tasks', newTasks);
+            console.log(newTasks);
         } else {
             this.setState({
                 error: 'Can\'t recognize this ToDo item. Try again.'
             })
         }
-        this.props.cookies.set('tasks', newTasks);
+        console.log('updated2');
     }
 
-    handleClickTask(taskId, newTaskName, newTaskDescription, newTaskisCompleted) {
+    handleClickTask(taskId, newTaskIsCompleted) {
         const { tasks } = this.state;
         let newTasks = tasks;
         const position = this.findElement(taskId, tasks);
-        let newTask = {
-            'taskId': tasks.length > 0
-                ? tasks[tasks.length - 1].taskId + 1
-                : 0,
-            'taskName': newTaskName,
-            'taskDescription': newTaskDescription,
-            'isCompleted': !newTaskisCompleted
-        };
         if (position !== -1) {
-            newTasks = newTasks.splice(position, 1, newTask);
+            newTasks[position].isCompleted = newTaskIsCompleted;
+            this.props.cookies.set('tasks', newTasks);
         } else {
             this.setState({
                 error: 'Can\'t recognize this ToDo item. Try again.'
             })
         }
-        this.props.cookies.set('tasks', newTasks);
     }
 
     findElement(taskId, tasks) {

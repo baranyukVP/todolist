@@ -2,23 +2,45 @@ import React, { Fragment } from 'react';
 import Input from './Input';
 
 class Task extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            taskId: props.taskId,
-            name: props.name ? props.name : '',
-            newName: props.name ? props.name : '',
-            newDescription: props.description ? props.description : '',
-            description: props.description ? props.description : '',
-            isCompleted: props.isCompleted,
-            isEditing: false
-        };
-        this.onClickEdit = this.onClickEdit.bind(this);
-        this.onClickEditButton = this.onClickEditButton.bind(this);
-        this.onClickRemove = this.onClickRemove.bind(this); 
-        this.onClickTask = this.onClickTask.bind(this);
-        this.onEdit = this.onEdit.bind(this);
-        this.onClickEditCancel = this.onClickEditCancel.bind(this);
+    state = {
+        taskId: '',
+        name: '',
+        newName: '',
+        newDescription: '',
+        description: '',
+        isCompleted: false,
+        isEditing: false
+    }
+
+    static getDerivedStateFromProps(props, state) {
+        let result = null;
+        if (props.taskId !== state.taskId) {
+            result = {
+                ...result,
+                taskId: props.taskId
+            }
+        }
+        if (props.name !== state.name) {
+            result = {
+                ...result,
+                name: props.name,
+                newName: props.name
+            }
+        }
+        if (props.description !== state.description) {
+            result = {
+                ...result,
+                description: props.description,
+                newDescription: props.description
+            }
+        }
+        if (props.isCompleted !== state.isCompleted) {
+            result = {
+                ...result,
+                isCompleted: props.isCompleted
+            }
+        }
+        return result;
     }
 
     onEdit(e) {
@@ -38,14 +60,22 @@ class Task extends React.Component {
     onClickEditCancel(e) {
         e.preventDefault();
         this.setState({
+            newName: '',
+            newDescription: '',
             isEditing: false
         })
     }
 
     onClickEdit(e) {
         e.preventDefault();
-        const { taskId, name, description, isCompleted } = this.state;
-        this.props.handleClickEdit(taskId, name, description, isCompleted);
+        const { taskId, newName, newDescription } = this.state;
+        this.props.handleClickEdit(taskId, newName, newDescription);
+        this.setState({
+            newName: '',
+            newDescription: '',
+            isEditing: false
+        });
+        console.log('updated');
     }
 
     onClickRemove(e) {
@@ -55,8 +85,8 @@ class Task extends React.Component {
     }
 
     onClickTask(e) {
-        const { taskId, name, description, isCompleted } = this.state;
-        this.props.handleClickTask(taskId, name, description, isCompleted);
+        const { taskId, isCompleted } = this.state;
+        this.props.handleClickTask(taskId, !isCompleted);
     }
 
     render() {
@@ -74,30 +104,30 @@ class Task extends React.Component {
             >
                 {isEditing
                     ? (<form>
-                            <Input
-                                name="newName"
-                                value={newName}
-                                placeholder={name}
-                                onChange={this.onEdit}
-                                onBlur={this.onEdit}
-                            />
-                            <Input
-                                name="newDescription"
-                                value={newDescription}
-                                placeholder={description}
-                                onChange={this.onEdit}
-                                onBlur={this.onEdit}
-                            />
+                        <Input
+                            name="newName"
+                            value={newName}
+                            placeholder={name}
+                            onChange={this.onEdit.bind(this)}
+                            onBlur={this.onEdit.bind(this)}
+                        />
+                        <Input
+                            name="newDescription"
+                            value={newDescription}
+                            placeholder={description}
+                            onChange={this.onEdit.bind(this)}
+                            onBlur={this.onEdit.bind(this)}
+                        />
                         <button
-                            onClick={this.onClickEdit}
+                            onClick={this.onClickEdit.bind(this)}
                         >
                             Save
-                            </button>
+                        </button>
                         <button
-                            onClick={this.onClickEditCancel}
+                            onClick={this.onClickEditCancel.bind(this)}
                         >
                             Cancel
-                            </button>
+                        </button>
                         </form>)
                     : (
                         <Fragment>
@@ -111,19 +141,19 @@ class Task extends React.Component {
                             </div>
                             <div className="task-buttons">
                                 <button
-                                    onClick={this.onClickEditButton}
+                                    onClick={this.onClickEditButton.bind(this)}
                                 >
                                     Edit
                                 </button>
                                 <button
-                                    onClick={this.onClickRemove}
+                                    onClick={this.onClickRemove.bind(this)}
                                 >
                                     Remove
                                 </button>
                                 <input
                                     type='checkbox'
                                     checked={isCompleted}
-                                    onClick={this.onClickTask}
+                                    onClick={this.onClickTask.bind(this)}
                                 />
                             </div>
                         </Fragment>
