@@ -25,7 +25,7 @@ class App extends React.Component {
         e.preventDefault();
         const { tasks, taskName, taskDescription } = this.state;
 
-        let newTask = { 'taskName': taskName, 'taskDescription': taskDescription };
+        let newTask = { 'taskId': tasks.length, 'taskName': taskName, 'taskDescription': taskDescription };
         let newTasks = tasks ? tasks : [];
         newTasks.push(newTask);
 
@@ -51,7 +51,7 @@ class App extends React.Component {
                 <div className="task-list">
                     {tasks && tasks.map((task) => (
                         <Task
-                            key={task.id}
+                            key={task.taskId}
                             name={task.taskName}
                             description={task.taskDescription}
                         />)
