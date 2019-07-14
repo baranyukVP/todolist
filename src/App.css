@@ -36,6 +36,7 @@ input {
     min-width: 200px;
     padding: 20px;
     transition: .2s;
+    width: 100%;
 }
     .task:hover {
         background-color: #a1ff82;
@@ -51,9 +52,9 @@ input {
     flex-direction: column;
     justify-content: flex-start;
 }
-.task-text {
-}
-.task-buttons {
+
+.task-button-bar {
+    width: 100%;
 }
 
 .task h2, p {
