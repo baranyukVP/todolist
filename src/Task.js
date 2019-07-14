@@ -28,22 +28,26 @@ class Task extends React.Component {
         const { name, description } = this.state;
         return (
             <div className="task">
-                <h2>
-                    {name}
-                </h2>
-                <p>
-                    {description}
-                </p>
-                <button
-                    onClick={this.onClickEdit}
-                >
-                    Edit
-                </button>
-                <button
-                    onClick={this.onClickRemove}
-                >
-                    Remove
-                </button>
+                <div className="task-text">
+                    <h2>
+                        {name}
+                    </h2>
+                    <p>
+                        {description}
+                    </p>
+                </div>
+                <div className="task-buttons">
+                    <button
+                        onClick={this.onClickEdit}
+                    >
+                        Edit
+                    </button>
+                    <button
+                        onClick={this.onClickRemove}
+                    >
+                        Remove
+                    </button>
+                </div>
             </div>
         );
     }

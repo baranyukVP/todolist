@@ -12,9 +12,23 @@ body {
 }
 
 .task {
+    border: 1px solid #aaaaaa;
+    display: flex;
+    justify-content: space-between;
+    margin: 8px;
+    min-width: 200px;
+    padding: 20px;
+}
+
+.task-text, .task-buttons {
     display: flex;
     align-items: flex-start;
     flex-direction: column;
+    justify-content: flex-start;
+}
+.task-text {
+}
+.task-buttons {
 }
 
 .task h2, p {
