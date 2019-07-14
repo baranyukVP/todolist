@@ -5,6 +5,23 @@ body {
     padding: 0;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    padding: 0;
+    margin: 0;
+}
+
+input {
+    border: 1px solid #aaaaaa;
+    border-radius: 8px;
+    padding: 10px;
+    height: 30px;
+    width: 100%;
+}
+
+.input {
+    margin-bottom: 20px;
+}
+
 .App {
     display: flex;
     align-items: center;
@@ -18,7 +35,15 @@ body {
     margin: 8px;
     min-width: 200px;
     padding: 20px;
+    transition: .2s;
 }
+    .task:hover {
+        background-color: #a1ff82;
+    }
+
+    .task.completed {
+        background-color: #a1ff82;
+    }
 
 .task-text, .task-buttons {
     display: flex;

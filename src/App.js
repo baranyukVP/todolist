@@ -21,7 +21,8 @@ class App extends React.Component {
         this.addNewTask = this.addNewTask.bind(this);
         this.onChangeNewTaskParams = this.onChangeNewTaskParams.bind(this);
         this.handleClickEdit = this.handleClickEdit.bind(this);
-        this.handleClickRemove = this.handleClickRemove.bind(this);
+        this.handleClickRemove = this.handleClickRemove.bind(this); 
+        this.handleClickTask = this.handleClickTask.bind(this);
     }
 
     addNewTask(e) {
@@ -33,7 +34,8 @@ class App extends React.Component {
                 ? tasks[tasks.length - 1].taskId + 1
                 : 0,
             'taskName': taskName,
-            'taskDescription': taskDescription
+            'taskDescription': taskDescription,
+            'isCompleted': false
         };
         let newTasks = tasks ? tasks : [];
         newTasks.push(newTask);
@@ -62,7 +64,7 @@ class App extends React.Component {
         this.props.cookies.set('tasks', newTasks);
     }
 
-    handleClickEdit(taskId, newTaskName, newTaskDescription) {
+    handleClickEdit(taskId, newTaskName, newTaskDescription, newTaskisCompleted) {
         const { tasks } = this.state;
         let newTasks = tasks;
         const position = this.findElement(taskId, tasks);
@@ -73,7 +75,30 @@ class App extends React.Component {
                 ? tasks[tasks.length - 1].taskId + 1
                 : 0,
             'taskName': newTaskName,
-            'taskDescription': newTaskDescription
+            'taskDescription': newTaskDescription,
+            'isCompleted': newTaskisCompleted
+        };
+        if (position !== -1) {
+            newTasks = newTasks.splice(position, 1, newTask);
+        } else {
+            this.setState({
+                error: 'Can\'t recognize this ToDo item. Try again.'
+            })
+        }
+        this.props.cookies.set('tasks', newTasks);
+    }
+
+    handleClickTask(taskId, newTaskName, newTaskDescription, newTaskisCompleted) {
+        const { tasks } = this.state;
+        let newTasks = tasks;
+        const position = this.findElement(taskId, tasks);
+        let newTask = {
+            'taskId': tasks.length > 0
+                ? tasks[tasks.length - 1].taskId + 1
+                : 0,
+            'taskName': newTaskName,
+            'taskDescription': newTaskDescription,
+            'isCompleted': !newTaskisCompleted
         };
         if (position !== -1) {
             newTasks = newTasks.splice(position, 1, newTask);
@@ -107,13 +132,16 @@ class App extends React.Component {
                 {error ? (<h2 className="text-danger">{error}</h2>) : null}
 
                 <form className="task-btn-bar">
+                    <h2>Create new task</h2>
                     <Input
+                        title="Name"
                         name="taskName"
                         value={taskName}
                         onChange={this.onChangeNewTaskParams}
                         onBlur={this.onChangeNewTaskParams}
                     />
                     <Input
+                        title="Description"
                         name="taskDescription"
                         value={taskDescription}
                         onChange={this.onChangeNewTaskParams}
@@ -131,6 +159,8 @@ class App extends React.Component {
                             key={task.taskId}
                             taskId={task.taskId}
                             name={task.taskName}
+                            isCompleted={task.isCompleted}
+                            handleClickTask={this.handleClickTask}
                             handleClickEdit={this.handleClickEdit}
                             handleClickRemove={this.handleClickRemove}
                             description={task.taskDescription}

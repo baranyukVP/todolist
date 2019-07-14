@@ -5,7 +5,7 @@ const Input = ({
     error = '',
     ...props
 }) => (
-        <div>
+        <div className="input">
             {title && (<h4>{title}</h4>)}
             <input
                 {...props}
