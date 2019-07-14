@@ -15,10 +15,12 @@ class App extends React.Component {
         this.state = {
             tasks: props.cookies.get('tasks') || [],
             taskName: '',
-            taskDescription: ''
+            taskDescription: '',
+            error: null
         };
         this.addNewTask = this.addNewTask.bind(this);
         this.onChangeNewTaskParams = this.onChangeNewTaskParams.bind(this);
+        this.handleClickEdit = this.handleClickEdit.bind(this);
     }
 
     addNewTask(e) {
@@ -45,44 +47,81 @@ class App extends React.Component {
         })
     }
 
+    handleClickEdit(taskId, newTaskName, newTaskDescription) {
+        const { tasks } = this.state;
+        let newTasks = tasks;
+        const position = this.findElement(taskId, tasks);
+        console.log(taskId);
+        console.log(tasks[position]);
+        let newTask = {
+            'taskId': tasks.length > 0
+                ? tasks[tasks.length - 1].taskId + 1
+                : 0,
+            'taskName': newTaskName,
+            'taskDescription': newTaskDescription
+        };
+        if (position !== -1) {
+            newTasks = newTasks.splice(position, 1);
+            newTasks.push(newTask);
+        } else {
+            this.setState({
+                error: 'Can\'t recognize this ToDo item. Try again.'
+            })
+        }
+        this.props.cookies.set('tasks', newTasks);
+    }
+
+    findElement(taskId, tasks) {
+        for (var i = 0; i < tasks.length; i++) {
+            if (taskId === tasks[i].taskId) {
+                return i;
+            }
+        }
+        return false;
+    }
+
     render() {
         const {
             tasks,
             taskName,
-            taskDescription
+            taskDescription,
+            error
         } = this.state;
         return (
             <div className="App">
                 <h1>ToDoList</h1>
-                <div className="task-list">
-                    {tasks && tasks.map((task) => (
-                        <Task
-                            key={task.taskId}
-                            name={task.taskName}
-                            description={task.taskDescription}
-                        />)
-                    )}
-                    <form>
-                        <Input
-                            name="taskName"
-                            value={taskName}
-                            onChange={this.onChangeNewTaskParams}
-                            onBlur={this.onChangeNewTaskParams}
-                        />
-                        <Input
-                            name="taskDescription"
-                            value={taskDescription}
-                            onChange={this.onChangeNewTaskParams}
-                            onBlur={this.onChangeNewTaskParams}
-                        />
-                    </form>
-                </div>
-                <div className="task-btn-bar">
+                {error ? (<h2 className="text-danger">{error}</h2>) : null}
+
+                <form className="task-btn-bar">
+                    <Input
+                        name="taskName"
+                        value={taskName}
+                        onChange={this.onChangeNewTaskParams}
+                        onBlur={this.onChangeNewTaskParams}
+                    />
+                    <Input
+                        name="taskDescription"
+                        value={taskDescription}
+                        onChange={this.onChangeNewTaskParams}
+                        onBlur={this.onChangeNewTaskParams}
+                    />
                     <button
                         onClick={this.addNewTask}
                     >
                         Add new task
                     </button>
+                </form>
+                <div className="task-list">
+                    {tasks && tasks.length > 0 && tasks?.map((task) => (
+                        <Task
+                            key={task.taskId}
+                            taskId={task.taskId}
+                            name={task.taskName}
+                            handleClickEdit={this.handleClickEdit}
+                            description={task.taskDescription}
+                        />)
+                    )}
+                    
                 </div>
             </div>
         );
