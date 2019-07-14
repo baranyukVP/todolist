@@ -9,20 +9,34 @@ class App extends React.Component {
     static propTypes = {
         cookies: instanceOf(Cookies).isRequired
     };
+    
+    state = {
+        tasks: [],
+        sortedTasks: [],
+        taskName: '',
+        taskDescription: '',
+        error: null
+    }
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            tasks: props.cookies.get('tasks') || [],
-            taskName: '',
-            taskDescription: '',
-            error: null
-        };
-        this.addNewTask = this.addNewTask.bind(this);
-        this.onChangeNewTaskParams = this.onChangeNewTaskParams.bind(this);
-        this.handleClickEdit = this.handleClickEdit.bind(this);
-        this.handleClickRemove = this.handleClickRemove.bind(this); 
-        this.handleClickTask = this.handleClickTask.bind(this);
+    static getDerivedStateFromProps(props, state) {
+        let result = null;
+        const tasks = props.cookies.get('tasks');
+        if (tasks !== state.tasks) {
+            result = {
+                ...result,
+                tasks: tasks,
+                sortedTasks: tasks.sort((a, b) => {
+                    if (a.taskName[0] < b.taskName[0]) {
+                        return -1;
+                    }
+                    if (a.taskName[0] > b.taskName[0]) {
+                        return 1;
+                    }
+                    return 0;
+                }).reverse() || [],
+            }
+        }
+        return result;
     }
 
     addNewTask(e) {
@@ -109,7 +123,7 @@ class App extends React.Component {
 
     render() {
         const {
-            tasks,
+            sortedTasks,
             taskName,
             taskDescription,
             error
@@ -125,32 +139,32 @@ class App extends React.Component {
                         title="Name"
                         name="taskName"
                         value={taskName}
-                        onChange={this.onChangeNewTaskParams}
-                        onBlur={this.onChangeNewTaskParams}
+                        onChange={this.onChangeNewTaskParams.bind(this)}
+                        onBlur={this.onChangeNewTaskParams.bind(this)}
                     />
                     <Input
                         title="Description"
                         name="taskDescription"
                         value={taskDescription}
-                        onChange={this.onChangeNewTaskParams}
-                        onBlur={this.onChangeNewTaskParams}
+                        onChange={this.onChangeNewTaskParams.bind(this)}
+                        onBlur={this.onChangeNewTaskParams.bind(this)}
                     />
                     <button
-                        onClick={this.addNewTask}
+                        onClick={this.addNewTask.bind(this)}
                     >
                         Add new task
                     </button>
                 </form>
                 <div className="task-list">
-                    {tasks && tasks.length > 0 && tasks?.map((task) => (
+                    {sortedTasks && sortedTasks.length > 0 && sortedTasks?.map((task) => (
                         <Task
                             key={task.taskId}
                             taskId={task.taskId}
                             name={task.taskName}
                             isCompleted={task.isCompleted}
-                            handleClickTask={this.handleClickTask}
-                            handleClickEdit={this.handleClickEdit}
-                            handleClickRemove={this.handleClickRemove}
+                            handleClickTask={this.handleClickTask.bind(this)}
+                            handleClickEdit={this.handleClickEdit.bind(this)}
+                            handleClickRemove={this.handleClickRemove.bind(this)}
                             description={task.taskDescription}
                         />)
                     )}
