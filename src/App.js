@@ -2,6 +2,7 @@ import React from 'react';
 import { withCookies } from 'react-cookie';
 import './App.css';
 import Task from './Task';
+import Input from './Input';
 
 class App extends React.Component {
     constructor(props) {
@@ -43,13 +44,13 @@ class App extends React.Component {
                         />)
                     )}
                     <form>
-                        <input
+                        <Input
                             name="taskName"
                             value={taskName}
                             onChange={this.onChangeNewTaskParams}
                             onBlur={this.onChangeNewTaskParams}
                         />
-                        <input
+                        <Input
                             name="taskDescription"
                             value={taskDescription}
                             onChange={this.onChangeNewTaskParams}
