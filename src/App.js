@@ -1,22 +1,35 @@
 import React from 'react';
-import { withCookies } from 'react-cookie';
+import { withCookies, Cookies } from 'react-cookie';
 import './App.css';
 import Task from './Task';
 import Input from './Input';
+import { instanceOf } from 'prop-types';
 
 class App extends React.Component {
+    static propTypes = {
+        cookies: instanceOf(Cookies).isRequired
+    };
+
     constructor(props) {
         super(props);
         this.state = {
-            tasks: props.cookies ?.tasks,
+            tasks: props.cookies.get('tasks') || [],
             taskName: '',
             taskDescription: ''
-        }
+        };
+        this.addNewTask = this.addNewTask.bind(this);
+        this.onChangeNewTaskParams = this.onChangeNewTaskParams.bind(this);
     }
 
     addNewTask(e) {
         e.preventDefault();
+        const { tasks, taskName, taskDescription } = this.state;
 
+        let newTask = { 'taskName': taskName, 'taskDescription': taskDescription };
+        let newTasks = tasks ? tasks : [];
+        newTasks.push(newTask);
+
+        this.props.cookies.set('tasks', newTasks);
     }
 
     onChangeNewTaskParams(e) {
@@ -39,8 +52,8 @@ class App extends React.Component {
                     {tasks && tasks.map((task) => (
                         <Task
                             key={task.id}
-                            name={task.name}
-                            description={task.description}
+                            name={task.taskName}
+                            description={task.taskDescription}
                         />)
                     )}
                     <form>
