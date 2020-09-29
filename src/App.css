@@ -7,18 +7,20 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
     padding: 0;
-    margin: 0;
+    margin: 16px 0 0;
 }
 
 input {
     border: 1px solid #aaaaaa;
     border-radius: 8px;
+    box-sizing: border-box;
     padding: 10px;
-    height: 30px;
+    height: 48px;
     width: 100%;
 }
 
 .input {
+    box-sizing: border-box;
     margin-bottom: 20px;
 }
 
@@ -28,15 +30,19 @@ input {
     flex-direction: column;
 }
 
+.task-list, .task-btn-bar {
+    width: 320px;
+}
+
 .task {
     border: 1px solid #aaaaaa;
+    box-sizing: border-box;
     display: flex;
     justify-content: space-between;
-    margin: 8px;
+    margin: 8px 0;
     min-width: 200px;
     padding: 20px;
     transition: .2s;
-    width: 100%;
 }
     .task:hover {
         background-color: #a1ff82;
